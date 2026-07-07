@@ -24,14 +24,14 @@ namespace CMP.Scripts
 
         #region movement Logic
 
-        private Vector2Int _previousGridPos;
-        private Vector2Int _currentGridPos;
-        private bool _isMoving;
-        private float _moveElapsed;
-        private float _currentMoveDuration;
+        private Direction _headingDirection = Direction.None;
         private Vector3 _moveStartWorld;
         private Vector3 _moveTargetWorld;
-        private Direction _headingDirection = Direction.None;
+        private Vector2Int _previousGridPos;
+        private Vector2Int _currentGridPos;
+        private float _moveElapsed;
+        private float _currentMoveDuration;
+        private bool _isMoving;
 
         #endregion
 
@@ -62,10 +62,10 @@ namespace CMP.Scripts
 
         private void HandleMovement()
         {
-            // buffered Input logics
             Direction requested = _inputManager.CurrentDirection;
             if (requested != Direction.None && requested == _headingDirection.Reverse())
             {
+                //reverse direction case implementation
                 float moveProgress = _isMoving ? Mathf.Clamp01(_moveElapsed / _currentMoveDuration) : 1f;
                 _headingDirection = requested;
                 _inputManager.ConsumeInput();
