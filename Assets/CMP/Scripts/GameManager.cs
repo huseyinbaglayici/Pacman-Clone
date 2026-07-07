@@ -21,8 +21,10 @@ namespace CMP.Scripts
         private void Start()
         {
             var gridData = AssetDatabase.Instance.GridData;
-            _pacman = Instantiate(AssetDatabase.Instance.PacmanPrefab);
             _inputManager = Instantiate(AssetDatabase.Instance.InputManagerPrefab);
+            _pacman = Instantiate(AssetDatabase.Instance.PacmanPrefab);
+            _pacman.Init(_inputManager, gridData);
+            // enemy instantiate right here
             CreateBackground(gridData);
             AdjustCamera(gridData);
         }
@@ -33,12 +35,12 @@ namespace CMP.Scripts
             var textureObject = new GameObject("MapTexture");
             textureObject.transform.position = new Vector3(-0.5f, -0.5f, 0f);
             var targetSprite = Sprite.Create(targetTexture, new Rect(0f, 0f, targetTexture.width, targetTexture.height),
-                Vector2.zero,AssetDatabase.Instance.MapVisualSettings.pixelsPerCell);
+                Vector2.zero, AssetDatabase.Instance.MapVisualSettings.pixelsPerCell);
             var spriteRenderer = textureObject.AddComponent<SpriteRenderer>();
             spriteRenderer.sprite = targetSprite;
             spriteRenderer.sortingOrder = -1;
         }
-        
+
         private void AdjustCamera(GridData gridData)
         {
             var mainCamera = Camera.main;

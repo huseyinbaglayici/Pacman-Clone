@@ -14,12 +14,13 @@ namespace CMP.Scripts
         {
             return new List<Vector2Int>
             {
-                cellCoords + Vector2Int.left, 
-                cellCoords + Vector2Int.right, 
+                cellCoords + Vector2Int.left,
+                cellCoords + Vector2Int.right,
                 cellCoords + Vector2Int.up,
                 cellCoords + Vector2Int.down
             };
         }
+
 
         public static Vector2Int ToVector2Int(this Direction cellType)
         {
@@ -52,21 +53,24 @@ namespace CMP.Scripts
                 _ => Direction.None
             };
         }
-        
+
         public static Direction ToDirection(this Vector2Int vector)
         {
             if (vector == Vector2Int.left)
             {
                 return Direction.Left;
             }
+
             if (vector == Vector2Int.right)
             {
                 return Direction.Right;
             }
+
             if (vector == Vector2Int.up)
             {
                 return Direction.Up;
             }
+
             if (vector == Vector2Int.down)
             {
                 return Direction.Down;
@@ -88,7 +92,7 @@ namespace CMP.Scripts
                 case Direction.Down:
                     return Quaternion.Euler(0, 0, 180);
             }
-            
+
             return Quaternion.identity;
         }
     }

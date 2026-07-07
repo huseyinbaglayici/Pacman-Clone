@@ -2,6 +2,7 @@ namespace CMP.Scripts
 {
     public static class GameSettings
     {
+        // theese are the configs
         public const float AiMovementDuration = 0.25f;
         public const float PacmanMovementDuration = 0.25f;
         public const int AiCharacterCount = 3;

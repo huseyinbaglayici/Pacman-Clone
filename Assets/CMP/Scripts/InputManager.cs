@@ -11,7 +11,7 @@ namespace CMP.Scripts
         Up,
         Down
     }
-    
+
     public class InputManager : MonoBehaviour
     {
         public Button LeftButton;
@@ -19,32 +19,23 @@ namespace CMP.Scripts
         public Button UpButton;
         public Button DownButton;
 
-        Direction _currentDirection;
-        
+        public Direction CurrentDirection { get; private set; }
+
         private void Awake()
         {
-            LeftButton.onClick.AddListener(() =>
-            {
-                _currentDirection = Direction.Left;
-            });
-            RightButton.onClick.AddListener(() =>
-            {
-                _currentDirection = Direction.Right;
-            });
-            UpButton.onClick.AddListener(() =>
-            {
-                _currentDirection = Direction.Up;
-            });
-            DownButton.onClick.AddListener(() =>
-            {
-                _currentDirection = Direction.Down;
-            });
+            LeftButton.onClick.AddListener(() => { CurrentDirection = Direction.Left; });
+            RightButton.onClick.AddListener(() => { CurrentDirection = Direction.Right; });
+            UpButton.onClick.AddListener(() => { CurrentDirection = Direction.Up; });
+            DownButton.onClick.AddListener(() => { CurrentDirection = Direction.Down; });
         }
 
+        /// <summary>
+        /// Call only when the direction is validated and about to be applied.
+        /// </summary>
         public Direction ConsumeInput()
         {
-            var dir = _currentDirection;
-            _currentDirection = Direction.None;
+            var dir = CurrentDirection;
+            CurrentDirection = Direction.None;
             return dir;
         }
     }
