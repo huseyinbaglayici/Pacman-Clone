@@ -26,13 +26,13 @@ namespace CMP.Scripts
         public GameObject LeftEye;
         public GameObject RightEye;
         public bool IsMoving { get; private set; }
-    
+
         #endregion
 
 
-        public void Init(GridData gridData, Vector2Int spawnGridPos)
+        public void Init(GridData gridData, Vector2Int spawnGridPos, float joinDelay)
         {
-            _blackboard = new GhostBlackboard(this, gridData, spawnGridPos, Direction.Up);
+            _blackboard = new GhostBlackboard(this, gridData, spawnGridPos, Direction.Up, joinDelay);
             transform.position = new Vector3(spawnGridPos.x, spawnGridPos.y, 0);
             ChangeState(new InHouseState(_blackboard));
         }
@@ -61,7 +61,7 @@ namespace CMP.Scripts
         }
 
 
-        private void ChangeState(AiStates.GhostState newState)
+        public void ChangeState(AiStates.GhostState newState)
         {
             _currentState = newState;
             _currentState.OnEnter();

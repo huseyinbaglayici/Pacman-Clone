@@ -32,13 +32,29 @@ namespace CMP.Scripts
         private void SetupEnemies(GridData gridData)
         {
             var spawnPositions = gridData.GetCoordsOfCellType(CellType.AiSpawnZone);
+
+            Debug.Assert(GameSettings.AiCharacterCount <= GameSettings.AiJoinDelays.Length,
+                $"AiCharacterCount({GameSettings.AiCharacterCount}) exceeds AiJoinDelays.Length({GameSettings.AiJoinDelays.Length}) length; extra ghosts fall back to an extrapolated stagger.");
+
+
             for (int i = 0; i < GameSettings.AiCharacterCount; i++)
             {
                 var ghost = Instantiate(AssetDatabase.Instance.Ghost);
                 var spawnPos = spawnPositions[i % spawnPositions.Count];
-                ghost.Init(gridData, spawnPos);
+                ghost.Init(gridData, spawnPos, GetJoinDelay(i));
                 _ghosts.Add(ghost);
             }
+        }
+
+        private float GetJoinDelay(int index)
+        {
+            var delays = GameSettings.AiJoinDelays;
+            if (index < delays.Length)
+                return delays[index];
+
+            int last = delays.Length - 1;
+            float interval = delays[last] - delays[last - 1];
+            return delays[last] + (index - last) * interval;
         }
 
         private void CreateBackground(GridData gridData)
