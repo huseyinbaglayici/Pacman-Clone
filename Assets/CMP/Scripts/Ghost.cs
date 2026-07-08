@@ -16,9 +16,6 @@ namespace CMP.Scripts
     {
         #region variables
 
-        public GameObject LeftEye;
-        public GameObject RightEye;
-
         private GhostBlackboard _blackboard;
         private AiStates.GhostState _currentState;
 
@@ -26,9 +23,10 @@ namespace CMP.Scripts
         private Vector3 _moveTargetWorld;
         private float _moveElapsed;
 
-        private bool _isMoving = false;
-        public bool IsMoving => _isMoving;
-
+        public GameObject LeftEye;
+        public GameObject RightEye;
+        public bool IsMoving { get; private set; }
+    
         #endregion
 
 
@@ -45,18 +43,18 @@ namespace CMP.Scripts
             _moveStartWorld = transform.position;
             _moveTargetWorld = new Vector3(target.x, target.y, 0);
             _moveElapsed = 0f;
-            _isMoving = true;
+            IsMoving = true;
         }
 
         private void Update()
         {
-            if (_isMoving)
+            if (IsMoving)
             {
                 _moveElapsed += Time.deltaTime;
                 float t = Mathf.Clamp01(_moveElapsed / GameSettings.AiMovementDuration);
                 transform.position = Vector3.Lerp(_moveStartWorld, _moveTargetWorld, t);
                 if (t >= 1f)
-                    _isMoving = false;
+                    IsMoving = false;
             }
 
             _currentState.Update();
