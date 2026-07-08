@@ -24,6 +24,8 @@ namespace CMP.Scripts
 
         #region movement Logic
 
+        private const float MinMoveDuration = 0.0001f;
+
         private Direction _headingDirection = Direction.None;
         private Vector3 _moveStartWorld;
         private Vector3 _moveTargetWorld;
@@ -66,25 +68,30 @@ namespace CMP.Scripts
             if (requested != Direction.None && requested == _headingDirection.Reverse())
             {
                 //reverse direction case implementation
-                float moveProgress = _isMoving ? Mathf.Clamp01(_moveElapsed / _currentMoveDuration) : 1f;
                 _headingDirection = requested;
                 _inputManager.ConsumeInput();
 
-                float reversalDuration = Mathf.Max(moveProgress * GameSettings.PacmanMovementDuration, 0.0001f);
+                Vector3 previousWorld = new Vector3(_previousGridPos.x, _previousGridPos.y, 0);
+                float distance = Vector3.Distance(transform.position, previousWorld);
+                float reversalDuration = Mathf.Max(distance * GameSettings.PacmanMovementDuration, MinMoveDuration);
                 StartMove(_previousGridPos, reversalDuration);
                 return;
             }
 
+            float overshoot = 0f;
             if (_isMoving)
             {
                 _moveElapsed += Time.deltaTime;
-                float t = Mathf.Clamp01(_moveElapsed / _currentMoveDuration);
-                transform.position = Vector3.Lerp(_moveStartWorld, _moveTargetWorld, t);
+                if (_moveElapsed < _currentMoveDuration)
+                {
+                    transform.position = Vector3.Lerp(_moveStartWorld, _moveTargetWorld,
+                        _moveElapsed / _currentMoveDuration);
+                    return;
+                }
 
-                if (t >= 1f)
-                    _isMoving = false;
-
-                return;
+                transform.position = _moveTargetWorld;
+                overshoot = _moveElapsed - _currentMoveDuration;
+                _isMoving = false;
             }
 
             if (requested != Direction.None)
@@ -103,6 +110,8 @@ namespace CMP.Scripts
             if (!_gridData.IsCellMovable(target, AllowedCells)) return;
 
             StartMove(target, GameSettings.PacmanMovementDuration);
+            _moveElapsed = overshoot;
+            transform.position = Vector3.Lerp(_moveStartWorld, _moveTargetWorld, _moveElapsed / _currentMoveDuration);
         }
 
         private void StartMove(Vector2Int target, float duration)
