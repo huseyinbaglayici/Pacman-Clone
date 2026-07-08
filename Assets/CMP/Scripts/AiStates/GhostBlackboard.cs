@@ -1,7 +1,20 @@
+using UnityEngine;
+
 namespace CMP.Scripts.AiStates
 {
     public class GhostBlackboard
-    { // resources tan cekip baked bir move area uretmek icin olusturuldugunu dusundugum blackboard?
+    {
+        public Ghost Ghost;
+        public GridData GridData;
+        public Vector2Int CurrentGridPos;
+        public Direction Heading;
 
+        public GhostBlackboard(Ghost ghost, GridData gridData, Vector2Int currentGridPos, Direction heading)
+        {
+            Ghost = ghost;
+            GridData = gridData;
+            CurrentGridPos = currentGridPos;
+            Heading = heading;
+        }
     }
 }

@@ -24,9 +24,21 @@ namespace CMP.Scripts
             _inputManager = Instantiate(AssetDatabase.Instance.InputManagerPrefab);
             _pacman = Instantiate(AssetDatabase.Instance.PacmanPrefab);
             _pacman.Init(_inputManager, gridData);
-            // enemy instantiate right here
+            SetupEnemies(gridData);
             CreateBackground(gridData);
             AdjustCamera(gridData);
+        }
+
+        private void SetupEnemies(GridData gridData)
+        {
+            var spawnPositions = gridData.GetCoordsOfCellType(CellType.AiSpawnZone);
+            for (int i = 0; i < GameSettings.AiCharacterCount; i++)
+            {
+                var ghost = Instantiate(AssetDatabase.Instance.Ghost);
+                var spawnPos = spawnPositions[i % spawnPositions.Count];
+                ghost.Init(gridData, spawnPos);
+                _ghosts.Add(ghost);
+            }
         }
 
         private void CreateBackground(GridData gridData)
