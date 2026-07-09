@@ -15,6 +15,8 @@ namespace CMP.Scripts.AiStates
         {
         }
 
+        public override GhostStateType Type => GhostStateType.Chase;
+
         public override void OnEnter()
         {
         }

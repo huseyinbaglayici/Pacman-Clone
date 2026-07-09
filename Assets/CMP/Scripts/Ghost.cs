@@ -3,26 +3,19 @@ using UnityEngine;
 
 namespace CMP.Scripts
 {
-    public enum GhostState
-    {
-        InHouse,
-        JoiningGame,
-        Scatter,
-        Chase,
-    }
-
     public class Ghost : MonoBehaviour
     {
         #region variables
 
         private GhostBlackboard _blackboard;
-        private AiStates.GhostState _currentState;
+        private GhostState _currentState;
         private GridMover _mover;
 
         public GameObject LeftEye;
         public GameObject RightEye;
 
         public Vector2Int CurrentGridPos => _mover.CurrentCell;
+        public GhostStateType State => _currentState.Type;
         public bool IsMoving => _mover.IsMoving;
 
         #endregion
@@ -44,7 +37,7 @@ namespace CMP.Scripts
         }
 
 
-        public void ChangeState(AiStates.GhostState newState)
+        public void ChangeState(GhostState newState)
         {
             _currentState = newState;
             _currentState.OnEnter();

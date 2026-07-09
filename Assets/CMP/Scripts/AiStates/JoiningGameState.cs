@@ -18,6 +18,8 @@ namespace CMP.Scripts.AiStates
         {
         }
 
+        public override GhostStateType Type => GhostStateType.JoiningGame;
+
         public override void OnEnter()
         {
             Vector2Int goal = GhostBlackboard.GridData.GetCoordsOfCellType(CellType.JoinGameCell)[0];

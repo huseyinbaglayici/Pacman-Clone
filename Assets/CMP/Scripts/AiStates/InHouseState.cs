@@ -13,6 +13,7 @@ namespace CMP.Scripts.AiStates
         {
         }
 
+        public override GhostStateType Type => GhostStateType.InHouse;
         public override void OnEnter() => GhostBlackboard.Heading = Direction.Up;
 
         public override void Update()

@@ -14,6 +14,8 @@ namespace CMP.Scripts.AiStates
         {
         }
 
+        public override GhostStateType Type => GhostStateType.Scatter;
+
         public override void OnEnter()
         {
         }
