@@ -18,6 +18,14 @@ namespace CMP.Scripts
         private GameMode _gameMode = GameMode.Scatter;
         private readonly List<Ghost> _ghosts = new();
 
+        public GameMode Mode
+        {
+            get => _gameMode;
+            set => _gameMode = value;
+        }
+
+        public Pacman Pacman => _pacman;
+
         private void Start()
         {
             var gridData = AssetDatabase.Instance.GridData;
@@ -28,6 +36,9 @@ namespace CMP.Scripts
             CreateBackground(gridData);
             AdjustCamera(gridData);
         }
+
+
+        #region Setup
 
         private void SetupEnemies(GridData gridData)
         {
@@ -41,7 +52,7 @@ namespace CMP.Scripts
             {
                 var ghost = Instantiate(AssetDatabase.Instance.Ghost);
                 var spawnPos = spawnPositions[i % spawnPositions.Count];
-                ghost.Init(gridData, spawnPos, GetJoinDelay(i));
+                ghost.Init(gridData, spawnPos, GetJoinDelay(i), this);
                 _ghosts.Add(ghost);
             }
         }
@@ -56,6 +67,7 @@ namespace CMP.Scripts
             float interval = delays[last] - delays[last - 1];
             return delays[last] + (index - last) * interval;
         }
+
 
         private void CreateBackground(GridData gridData)
         {
@@ -74,6 +86,36 @@ namespace CMP.Scripts
             var mainCamera = Camera.main;
             mainCamera.orthographicSize = gridData.Height + GameSettings.CameraPadding;
             mainCamera.transform.position = new Vector3(gridData.Width / 2f - 0.5f, 0f, -10f);
+        }
+
+        #endregion
+
+
+        private void Update()
+        {
+            if (_gameMode == GameMode.GameOver)
+                return;
+
+            foreach (var ghost in _ghosts)
+            {
+                float distance = Vector2.Distance(ghost.transform.position, _pacman.transform.position);
+                if (distance <= GameSettings.CatchDistance)
+                {
+                    TriggerGameOver();
+                    return;
+                }
+            }
+        }
+
+        private void TriggerGameOver()
+        {
+            _gameMode = GameMode.GameOver;
+            _pacman.PlayFail();
+            _pacman.enabled = false;
+            foreach (var ghost in _ghosts)
+            {
+                ghost.enabled = false;
+            }
         }
     }
 }

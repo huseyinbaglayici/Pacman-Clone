@@ -28,10 +28,10 @@ namespace CMP.Scripts
         #endregion
 
 
-        public void Init(GridData gridData, Vector2Int spawnGridPos, float joinDelay)
+        public void Init(GridData gridData, Vector2Int spawnGridPos, float joinDelay, GameManager gameManager)
         {
             _mover = new GridMover(transform, spawnGridPos);
-            _blackboard = new GhostBlackboard(this, gridData, Direction.Up, joinDelay);
+            _blackboard = new GhostBlackboard(this, gridData, Direction.Up, joinDelay, gameManager);
             ChangeState(new InHouseState(_blackboard));
         }
 

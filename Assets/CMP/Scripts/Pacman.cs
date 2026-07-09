@@ -13,6 +13,7 @@ namespace CMP.Scripts
         private GridMover _mover;
         private Direction _headingDirection = Direction.None;
 
+        public Vector2Int CurrentGridPos => _mover.CurrentCell;
 
         public Animator Animator;
 
@@ -85,5 +86,8 @@ namespace CMP.Scripts
             if (transform.rotation == rotation) return;
             transform.rotation = rotation;
         }
+
+
+        public void PlayFail() => Animator.Play(FailAnimationName);
     }
 }
