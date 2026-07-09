@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace CMP.Scripts
+namespace CMP.Scripts.Helper
 {
     public static class Extensions
     {
