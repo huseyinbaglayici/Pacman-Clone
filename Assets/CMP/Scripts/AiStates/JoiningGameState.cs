@@ -31,7 +31,10 @@ namespace CMP.Scripts.AiStates
                 return;
 
             if (_path == null || _pathIndex >= _path.Count)
-                return; // TODO: add scatter 
+            {
+                GhostBlackboard.Ghost.ChangeState(new ScatterState(GhostBlackboard));
+                return;
+            }
 
             Vector2Int next = _path[_pathIndex];
             _pathIndex++;
