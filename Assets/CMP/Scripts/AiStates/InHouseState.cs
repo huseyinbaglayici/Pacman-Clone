@@ -7,6 +7,8 @@ namespace CMP.Scripts.AiStates
     {
         private static readonly List<CellType> AllowedCells = new() { CellType.AiSpawnZone, CellType.Empty };
 
+        private float _elapsed;
+
         public InHouseState(GhostBlackboard blackboard) : base(blackboard)
         {
         }
@@ -15,8 +17,16 @@ namespace CMP.Scripts.AiStates
 
         public override void Update()
         {
+            _elapsed += Time.deltaTime;
+
             if (GhostBlackboard.Ghost.IsMoving)
                 return;
+
+            if (_elapsed >= GhostBlackboard.JoinDelay)
+            {
+                GhostBlackboard.Ghost.ChangeState(new JoiningGameState(GhostBlackboard));
+                return;
+            }
 
             Vector2Int target = GhostBlackboard.CurrentGridPos + GhostBlackboard.Heading.ToVector2Int();
 
