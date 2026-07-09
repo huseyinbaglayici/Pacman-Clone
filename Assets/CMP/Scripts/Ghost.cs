@@ -11,11 +11,9 @@ namespace CMP.Scripts
         private GhostState _currentState;
         private GridMover _mover;
 
-        public GameObject LeftEye;
-        public GameObject RightEye;
-
         public Vector2Int CurrentGridPos => _mover.CurrentCell;
         public GhostStateType State => _currentState.Type;
+        public Direction Heading => _blackboard.Heading;
         public bool IsMoving => _mover.IsMoving;
 
         #endregion

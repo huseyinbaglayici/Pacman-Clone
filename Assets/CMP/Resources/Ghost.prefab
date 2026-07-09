@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2395730558473897659}
   - component: {fileID: 2013079678964424047}
   m_Layer: 0
-  m_Name: Eye
+  m_Name: LeftEye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 4946509312076830170}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.016000196, y: 0.06699998, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.071922, y: 0.071922, z: 0.071922}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -109,7 +109,7 @@ Transform:
   m_GameObject: {fileID: 5318730967083527768}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.124, y: 0.101, z: 0}
+  m_LocalPosition: {x: -0.115, y: 0.1055, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -141,7 +141,7 @@ Transform:
   m_GameObject: {fileID: 7729091361134234998}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.102, y: 0.101, z: 0}
+  m_LocalPosition: {x: 0.115, y: 0.1055, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -159,6 +159,7 @@ GameObject:
   - component: {fileID: 4400281737324402527}
   - component: {fileID: 8805452136450388178}
   - component: {fileID: 3015146059301652852}
+  - component: {fileID: -2973564026549524270}
   m_Layer: 0
   m_Name: Ghost
   m_TagString: Untagged
@@ -247,8 +248,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7966de7343684547b1937455681437e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LeftEye: {fileID: 5318730967083527768}
-  RightEye: {fileID: 7729091361134234998}
+--- !u!114 &-2973564026549524270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8612209853364153633}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9160761146564a7abc62ebee6028c984, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftEye: {fileID: 4946509312076830170}
+  rightEye: {fileID: 8938288785481291073}
+  eyeLookOffset: 0.025
 --- !u!1 &8938288785481291073
 GameObject:
   m_ObjectHideFlags: 0
@@ -260,7 +274,7 @@ GameObject:
   - component: {fileID: 5014828113437970396}
   - component: {fileID: 5962992414737455942}
   m_Layer: 0
-  m_Name: Eye
+  m_Name: RightEye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -275,7 +289,7 @@ Transform:
   m_GameObject: {fileID: 8938288785481291073}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.016000196, y: 0.06699998, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.071922, y: 0.071922, z: 0.071922}
   m_ConstrainProportionsScale: 0
   m_Children: []
