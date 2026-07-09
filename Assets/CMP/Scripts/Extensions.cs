@@ -95,5 +95,10 @@ namespace CMP.Scripts
 
             return Quaternion.identity;
         }
+
+        public static Vector3 ToWorld(this Vector2Int cell)
+        {
+            return new Vector3(cell.x, cell.y, 0);
+        }
     }
 }
