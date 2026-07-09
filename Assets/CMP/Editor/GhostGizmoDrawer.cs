@@ -1,11 +1,25 @@
-﻿using CMP.Scripts.Helper;
+﻿using CMP.Scripts;
+using CMP.Scripts.Helper;
 using UnityEditor;
 using UnityEngine;
+using AssetDatabase = CMP.Scripts.AssetDatabase;
 
-namespace CMP.Scripts
+namespace CMP.Editor
 {
     public static class GhostGizmoDrawer
     {
+        private const int LabelFontSize = 24;
+        private const float LabelVerticalOffset = 0.5f;
+        private static GUIStyle _labelStyle;
+
+        private static GUIStyle LabelStyle => _labelStyle ??= new GUIStyle
+        {
+            fontSize = LabelFontSize,
+            fontStyle = FontStyle.Bold,
+            normal = { textColor = Color.white }
+        };
+
+
         [DrawGizmo(GizmoType.NonSelected | GizmoType.Selected)]
         private static void DrawGhostGizmos(Ghost ghost, GizmoType type)
         {
@@ -39,8 +53,14 @@ namespace CMP.Scripts
 
         private static void DrawStateLabel(Ghost ghost)
         {
-            var style = new GUIStyle { fontSize = 14, normal = { textColor = Color.white } };
-            Handles.Label(ghost.transform.position + Vector3.up * 0.4f, ghost.State.ToString(), style);
+            var content = new GUIContent(ghost.State.ToString());
+            Vector3 worldPos = ghost.transform.position + Vector3.up * LabelVerticalOffset;
+            Vector2 screenPos = HandleUtility.WorldToGUIPoint(worldPos);
+            Vector2 size = LabelStyle.CalcSize(content);
+            var rect = new Rect(screenPos.x - size.x * 0.5f, screenPos.y - size.y * 0.5f, size.x, size.y);
+            Handles.BeginGUI();
+            GUI.Label(rect, content, LabelStyle);
+            Handles.EndGUI();
         }
     }
 }
