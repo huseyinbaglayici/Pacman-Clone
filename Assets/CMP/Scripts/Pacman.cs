@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using CMP.Scripts.Helper;
 using UnityEngine;
 
@@ -20,13 +19,6 @@ namespace CMP.Scripts
 
         #endregion
 
-
-        private static readonly List<CellType> AllowedCells = new()
-        {
-            CellType.Pacman,
-            CellType.Empty,
-            CellType.JoinGameCell
-        };
 
         public void Init(InputManager inputManager, GridData gridData)
         {
@@ -64,7 +56,7 @@ namespace CMP.Scripts
             if (requested != Direction.None)
             {
                 Vector2Int requestedTarget = _mover.CurrentCell + requested.ToVector2Int();
-                if (_gridData.IsCellMovable(requestedTarget, AllowedCells))
+                if (_gridData.IsMovable(requestedTarget))
                 {
                     _headingDirection = requested;
                     _inputManager.ConsumeInput();
@@ -75,7 +67,7 @@ namespace CMP.Scripts
                 return;
 
             Vector2Int target = _mover.CurrentCell + _headingDirection.ToVector2Int();
-            if (!_gridData.IsCellMovable(target, AllowedCells))
+            if (!_gridData.IsMovable(target))
                 return;
 
             _mover.BeginMove(target, GameSettings.PacmanMovementDuration);

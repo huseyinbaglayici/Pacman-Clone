@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using CMP.Scripts.Helper;
 using UnityEngine;
 
 namespace CMP.Scripts
@@ -66,6 +67,11 @@ namespace CMP.Scripts
         public bool IsCellMovable(Vector2Int cellCoords, List<CellType> availableCells)
         {
             return GetInBounds(cellCoords) && availableCells.Contains(GetCellAt(cellCoords));
+        }
+
+        public bool IsMovable(Vector2Int cell)
+        {
+            return GetCellAtOrDefault(cell, CellType.Wall).GetIsMovable();
         }
     }
 }

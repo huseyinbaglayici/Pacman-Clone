@@ -1,12 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace CMP.Scripts.Helper
 {
     public static class Pathfinding
     {
-        public static List<Vector2Int> FindPath(GridData gridData, Vector2Int start, Vector2Int goal,
-            List<CellType> allowedCells)
+        private static readonly Vector2Int[] Offsets =
+            { Vector2Int.left, Vector2Int.right, Vector2Int.up, Vector2Int.down, };
+
+        public static List<Vector2Int> FindPath(Vector2Int start, Vector2Int goal,
+            Func<Vector2Int, bool> isWalkable)
         {
             var frontier = new Queue<Vector2Int>();
             var cameFrom = new Dictionary<Vector2Int, Vector2Int>();
@@ -20,12 +24,13 @@ namespace CMP.Scripts.Helper
                 if (current == goal)
                     return ReconstructPath(cameFrom, start, goal);
 
-                foreach (var next in current.GetNeighbours())
+                foreach (var offSet in Offsets)
                 {
+                    var next = current + offSet;
                     if (cameFrom.ContainsKey(next))
                         continue;
 
-                    if (!gridData.IsCellMovable(next, allowedCells))
+                    if (!isWalkable(next))
                         continue;
 
                     cameFrom[next] = current;

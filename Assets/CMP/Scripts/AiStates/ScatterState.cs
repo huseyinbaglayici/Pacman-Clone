@@ -6,11 +6,6 @@ namespace CMP.Scripts.AiStates
 {
     public class ScatterState : GhostState
     {
-        private static readonly List<CellType> AllowedCells = new()
-        {
-            CellType.Empty, CellType.JoinGameCell, CellType.Pacman
-        };
-
         public ScatterState(GhostBlackboard blackboard) : base(blackboard)
         {
         }
@@ -79,7 +74,7 @@ namespace CMP.Scripts.AiStates
                 if (dir == reverse)
                     continue;
                 Vector2Int cell = GhostBlackboard.CurrentGridPos + dir.ToVector2Int();
-                if (GhostBlackboard.GridData.IsCellMovable(cell, AllowedCells))
+                if (GhostBlackboard.GridData.IsMovable(cell))
                     candidates.Add(dir);
             }
 
@@ -87,7 +82,7 @@ namespace CMP.Scripts.AiStates
                 return candidates[Random.Range(0, candidates.Count)];
 
             Vector2Int reverseCell = GhostBlackboard.CurrentGridPos + reverse.ToVector2Int();
-            if (GhostBlackboard.GridData.IsCellMovable(reverseCell, AllowedCells))
+            if (GhostBlackboard.GridData.IsMovable(reverseCell))
                 return reverse;
 
             return Direction.None;

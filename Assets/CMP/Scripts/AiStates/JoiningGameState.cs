@@ -23,7 +23,8 @@ namespace CMP.Scripts.AiStates
         public override void OnEnter()
         {
             Vector2Int goal = GhostBlackboard.GridData.GetCoordsOfCellType(CellType.JoinGameCell)[0];
-            _path = Pathfinding.FindPath(GhostBlackboard.GridData, GhostBlackboard.CurrentGridPos, goal, AllowedCells);
+            _path = Pathfinding.FindPath(GhostBlackboard.CurrentGridPos, goal,
+                cell => GhostBlackboard.GridData.IsCellMovable(cell, AllowedCells));
             _pathIndex = 0;
         }
 
