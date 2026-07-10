@@ -1,2 +1,2 @@
 # Exclude vendored TextMeshPro assets (shaders/fonts) from GitHub language stats
-Assets/TextMesh Pro/** linguist-vendored
+"Assets/TextMesh Pro/**" linguist-vendored
