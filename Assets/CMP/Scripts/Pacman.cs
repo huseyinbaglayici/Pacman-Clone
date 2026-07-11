@@ -11,6 +11,7 @@ namespace CMP.Scripts
         private InputManager _inputManager;
         private GridData _gridData;
         private GridMover _mover;
+        private Vector2Int _startCell;
         private Direction _headingDirection = Direction.None;
 
         public Vector2Int CurrentGridPos => _mover.CurrentCell;
@@ -24,8 +25,16 @@ namespace CMP.Scripts
         {
             _inputManager = inputManager;
             _gridData = gridData;
-            Vector2Int start = gridData.GetCoordsOfCellType(CellType.Pacman)[0];
-            _mover = new GridMover(transform, start);
+            _startCell = gridData.GetCoordsOfCellType(CellType.Pacman)[0];
+            Spawn();
+        }
+
+        public void Spawn()
+        {
+            _mover = new GridMover(transform, _startCell);
+            _headingDirection = Direction.None;
+            Animator.Rebind();
+            enabled = true;
         }
 
 

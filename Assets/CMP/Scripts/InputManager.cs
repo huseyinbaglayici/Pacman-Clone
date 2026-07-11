@@ -38,5 +38,7 @@ namespace CMP.Scripts
             CurrentDirection = Direction.None;
             return dir;
         }
+
+        public void Clear() => CurrentDirection = Direction.None;
     }
 }

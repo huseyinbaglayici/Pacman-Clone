@@ -116,6 +116,19 @@ namespace CMP.Scripts
             {
                 ghost.enabled = false;
             }
+
+            Invoke(nameof(Restart), GameSettings.RestartDelay);
+        }
+
+        private void Restart()
+        {
+            _gameMode = GameMode.Scatter;
+            _inputManager.Clear();
+            _pacman.Spawn();
+            foreach (var ghost in _ghosts)
+            {
+                ghost.Spawn();
+            }
         }
     }
 }

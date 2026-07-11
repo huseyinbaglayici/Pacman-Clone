@@ -4,6 +4,7 @@ namespace CMP.Scripts
     {
         public const float AiMovementDuration = 0.25f;
         public const float PacmanMovementDuration = 0.25f;
+        public const float RestartDelay = 3f;
         public const int AiCharacterCount = 3;
         public const int AiSightRange = 6;
         public static readonly float[] AiJoinDelays = { 3f, 6f, 9f };
