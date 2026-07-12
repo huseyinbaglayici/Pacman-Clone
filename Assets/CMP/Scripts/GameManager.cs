@@ -16,7 +16,9 @@ namespace CMP.Scripts
     {
         private Pacman _pacman;
         private InputManager _inputManager;
+        private ScoreManager _scoreManager;
         private GameMode _gameMode = GameMode.Scatter;
+        private int _score;
         private readonly List<Ghost> _ghosts = new();
         private readonly Dictionary<Vector2Int, Collectable> _collectables = new();
 
@@ -32,6 +34,7 @@ namespace CMP.Scripts
         {
             var gridData = AssetDatabase.Instance.GridData;
             _inputManager = Instantiate(AssetDatabase.Instance.InputManagerPrefab);
+            _scoreManager = Instantiate(AssetDatabase.Instance.ScoreManagerPrefab);
             _pacman = Instantiate(AssetDatabase.Instance.PacmanPrefab);
             _pacman.Init(_inputManager, gridData);
             SetupEnemies(gridData);
@@ -62,13 +65,15 @@ namespace CMP.Scripts
 
         private void SetupCollectables(GridData gridData)
         {
+            var holder = new GameObject("Collectables").transform;
+
             foreach (var cell in gridData.GetCoordsOfCellType(CellType.Pellet))
                 _collectables[cell] =
-                    Instantiate(AssetDatabase.Instance.PelletPrefab, cell.ToWorld(), Quaternion.identity);
+                    Instantiate(AssetDatabase.Instance.PelletPrefab, cell.ToWorld(), Quaternion.identity, holder);
 
             foreach (var cell in gridData.GetCoordsOfCellType(CellType.PowerPellet))
                 _collectables[cell] = Instantiate(AssetDatabase.Instance.PowerPelletPrefab, cell.ToWorld(),
-                    Quaternion.identity);
+                    Quaternion.identity, holder);
         }
 
         private float GetJoinDelay(int index)
@@ -110,18 +115,30 @@ namespace CMP.Scripts
             if (_gameMode is GameMode.GameOver or GameMode.Win)
                 return;
 
+            HandleCollectables();
+            if (_gameMode == GameMode.Win)
+                return;
+
+            HandleCatch();
+        }
+
+        private void HandleCollectables()
+        {
             if (_collectables.TryGetValue(_pacman.CurrentGridPos, out var collectable))
             {
                 _collectables.Remove(_pacman.CurrentGridPos);
                 collectable.gameObject.SetActive(false);
+                AddScore(collectable.Type == CollectableType.Pellet
+                    ? GameSettings.PelletScore
+                    : GameSettings.PowerPelletScore);
 
                 if (_collectables.Count == 0)
-                {
                     TriggerWin();
-                    return;
-                }
             }
+        }
 
+        private void HandleCatch()
+        {
             foreach (var ghost in _ghosts)
             {
                 float distance = Vector2.Distance(ghost.transform.position, _pacman.transform.position);
@@ -131,6 +148,12 @@ namespace CMP.Scripts
                     return;
                 }
             }
+        }
+
+        private void AddScore(int amount)
+        {
+            _score += amount;
+            _scoreManager.SetScore(_score);
         }
 
         private void TriggerWin()

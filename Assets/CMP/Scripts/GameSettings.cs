@@ -7,6 +7,8 @@ namespace CMP.Scripts
         public const float RestartDelay = 3f;
         public const int AiCharacterCount = 3;
         public const int AiSightRange = 6;
+        public const int PelletScore = 10;
+        public const int PowerPelletScore = 50;
         public static readonly float[] AiJoinDelays = { 3f, 6f, 9f };
         public static float CatchDistance = 1f;
 
