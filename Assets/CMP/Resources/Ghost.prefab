@@ -262,6 +262,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftEye: {fileID: 4946509312076830170}
   rightEye: {fileID: 8938288785481291073}
+  body: {fileID: 8805452136450388178}
   eyeLookOffset: 0.025
 --- !u!1 &8938288785481291073
 GameObject:
