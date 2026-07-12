@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using CMP.Scripts.Helper;
+﻿using CMP.Scripts.Helper;
 using UnityEngine;
 
 namespace CMP.Scripts.AiStates
@@ -18,6 +17,12 @@ namespace CMP.Scripts.AiStates
 
         public override void Update()
         {
+            if (GhostBlackboard.GameManager.Mode == GameMode.Frightened)
+            {
+                GhostBlackboard.Ghost.ChangeState(new FrightenedState(GhostBlackboard));
+                return;
+            }
+
             if (GhostBlackboard.GameManager.Mode == GameMode.Chase)
             {
                 GhostBlackboard.Ghost.ChangeState(new ChaseState(GhostBlackboard));
@@ -34,7 +39,8 @@ namespace CMP.Scripts.AiStates
             if (GhostBlackboard.Ghost.IsMoving)
                 return;
 
-            Direction chosen = PickDirection();
+            Direction chosen = DirectionPicker.PickRandom(GhostBlackboard.CurrentGridPos, GhostBlackboard.Heading,
+                GhostBlackboard.GridData.IsMovable);
             if (chosen == Direction.None)
                 return;
 
@@ -62,30 +68,6 @@ namespace CMP.Scripts.AiStates
             }
 
             return false;
-        }
-
-        private Direction PickDirection()
-        {
-            Direction reverse = GhostBlackboard.Heading.Reverse();
-            var candidates = new List<Direction>();
-
-            foreach (var dir in GameSettings.DirectionsToCheck)
-            {
-                if (dir == reverse)
-                    continue;
-                Vector2Int cell = GhostBlackboard.CurrentGridPos + dir.ToVector2Int();
-                if (GhostBlackboard.GridData.IsMovable(cell))
-                    candidates.Add(dir);
-            }
-
-            if (candidates.Count > 0)
-                return candidates[Random.Range(0, candidates.Count)];
-
-            Vector2Int reverseCell = GhostBlackboard.CurrentGridPos + reverse.ToVector2Int();
-            if (GhostBlackboard.GridData.IsMovable(reverseCell))
-                return reverse;
-
-            return Direction.None;
         }
     }
 }

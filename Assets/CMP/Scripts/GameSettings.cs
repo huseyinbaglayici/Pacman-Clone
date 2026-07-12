@@ -5,6 +5,9 @@ namespace CMP.Scripts
         public const float AiMovementDuration = 0.25f;
         public const float PacmanMovementDuration = 0.25f;
         public const float RestartDelay = 3f;
+        public const float FrightenedDuration = 8f;
+        public const float FrightenedBlinkWarning = 3f;
+        public const float EatenMovementDuration = 0.125f;
         public const int AiCharacterCount = 3;
         public const int AiSightRange = 6;
         public const int PelletScore = 10;
@@ -14,6 +17,8 @@ namespace CMP.Scripts
 
         public static readonly Direction[] DirectionsToCheck =
             { Direction.Left, Direction.Right, Direction.Up, Direction.Down };
+
+        public static readonly int[] GhostScores = { 200, 400, 800, 1600 };
 
         public static float CameraPadding = 1f;
     }

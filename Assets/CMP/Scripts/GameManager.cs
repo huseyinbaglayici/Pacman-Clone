@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using CMP.Scripts.AiStates;
 using CMP.Scripts.Helper;
 using UnityEngine;
 
@@ -9,7 +10,8 @@ namespace CMP.Scripts
         Scatter,
         Chase,
         GameOver,
-        Win
+        Win,
+        Frightened
     }
 
     public class GameManager : MonoBehaviour
@@ -18,9 +20,13 @@ namespace CMP.Scripts
         private InputManager _inputManager;
         private ScoreManager _scoreManager;
         private GameMode _gameMode = GameMode.Scatter;
+        private float _frightenedTimer;
+        private int _ghostEaten;
         private int _score;
         private readonly List<Ghost> _ghosts = new();
         private readonly Dictionary<Vector2Int, Collectable> _collectables = new();
+
+        public float FrightenedTimeLeft => _frightenedTimer;
 
         public GameMode Mode
         {
@@ -115,6 +121,13 @@ namespace CMP.Scripts
             if (_gameMode is GameMode.GameOver or GameMode.Win)
                 return;
 
+            if (_gameMode == GameMode.Frightened)
+            {
+                _frightenedTimer -= Time.deltaTime;
+                if (_frightenedTimer <= 0f)
+                    _gameMode = GameMode.Scatter;
+            }
+
             HandleCollectables();
             if (_gameMode == GameMode.Win)
                 return;
@@ -132,17 +145,40 @@ namespace CMP.Scripts
                     ? GameSettings.PelletScore
                     : GameSettings.PowerPelletScore);
 
+                if (collectable.Type == CollectableType.PowerPellet)
+                    EnterFrightened();
+
                 if (_collectables.Count == 0)
                     TriggerWin();
             }
+        }
+
+        private void EnterFrightened()
+        {
+            _gameMode = GameMode.Frightened;
+            _frightenedTimer = GameSettings.FrightenedDuration;
+            _ghostEaten = 0;
         }
 
         private void HandleCatch()
         {
             foreach (var ghost in _ghosts)
             {
+                if (ghost.State == GhostStateType.Eaten)
+                    continue;
+
                 float distance = Vector2.Distance(ghost.transform.position, _pacman.transform.position);
-                if (distance <= GameSettings.CatchDistance)
+                if (distance > GameSettings.CatchDistance)
+                    continue;
+
+                if (ghost.State == GhostStateType.Frightened)
+                {
+                    AddScore(GameSettings.GhostScores[Mathf.Min(_ghostEaten, GameSettings.GhostScores.Length - 1)]);
+                    _ghostEaten++;
+                    ghost.GetEaten();
+                }
+
+                else if (_gameMode != GameMode.Frightened)
                 {
                     TriggerGameOver();
                     return;
@@ -183,6 +219,7 @@ namespace CMP.Scripts
         {
             _gameMode = GameMode.Scatter;
             _inputManager.Clear();
+            _frightenedTimer = 0;
             _pacman.Spawn();
             foreach (var ghost in _ghosts)
             {

@@ -6,5 +6,7 @@
         JoiningGame,
         Scatter,
         Chase,
+        Frightened,
+        Eaten
     }
 }

@@ -13,6 +13,7 @@ namespace CMP.Scripts
         private Vector2Int _spawnGridPos;
 
         public Vector2Int CurrentGridPos => _mover.CurrentCell;
+        public float FrightenedTimeLeft => _blackboard.GameManager.FrightenedTimeLeft;
         public GhostStateType State => _currentState.Type;
         public Direction Heading => _blackboard.Heading;
         public bool IsMoving => _mover.IsMoving;
@@ -23,7 +24,7 @@ namespace CMP.Scripts
         public void Init(GridData gridData, Vector2Int spawnGridPos, float joinDelay, GameManager gameManager)
         {
             _spawnGridPos = spawnGridPos;
-            _blackboard = new GhostBlackboard(this, gridData, Direction.Up, joinDelay, gameManager);
+            _blackboard = new GhostBlackboard(this, gridData, Direction.Up, joinDelay, gameManager, spawnGridPos);
             Spawn();
         }
 
@@ -34,7 +35,8 @@ namespace CMP.Scripts
             enabled = true;
         }
 
-        public void MoveTo(Vector2Int target) => _mover.BeginMove(target, GameSettings.AiMovementDuration);
+        public void MoveTo(Vector2Int target, float duration = GameSettings.AiMovementDuration) =>
+            _mover.BeginMove(target, duration);
 
         private void Update()
         {
@@ -48,5 +50,7 @@ namespace CMP.Scripts
             _currentState = newState;
             _currentState.OnEnter();
         }
+
+        public void GetEaten() => ChangeState(new EatenState(_blackboard));
     }
 }

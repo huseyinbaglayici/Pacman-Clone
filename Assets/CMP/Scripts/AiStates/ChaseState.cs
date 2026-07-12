@@ -18,6 +18,12 @@ namespace CMP.Scripts.AiStates
 
         public override void Update()
         {
+            if (GhostBlackboard.GameManager.Mode == GameMode.Frightened)
+            {
+                GhostBlackboard.Ghost.ChangeState(new FrightenedState(GhostBlackboard));
+                return;
+            }
+
             if (GhostBlackboard.Ghost.IsMoving)
                 return;
 
