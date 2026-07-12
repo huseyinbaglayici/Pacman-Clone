@@ -13,6 +13,8 @@ namespace CMP.Scripts
         Pacman,
         JoinGameCell,
         Invalid,
+        PowerPellet,
+        Pellet
     }
 
     [CreateAssetMenu(fileName = "NewGridData", menuName = "PacMan/Grid Data")]

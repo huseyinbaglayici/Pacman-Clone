@@ -32,6 +32,8 @@ namespace CMP.Tests.EditMode
         [TestCase(CellType.AiGate, false)]
         [TestCase(CellType.AiSpawnZone, false)]
         [TestCase(CellType.Invalid, false)]
+        [TestCase(CellType.PowerPellet, true)]
+        [TestCase(CellType.Pellet, true)]
         public void GetIsMovable_MatchesWalkabilityRules(CellType cell, bool expected)
         {
             Assert.AreEqual(expected, cell.GetIsMovable());

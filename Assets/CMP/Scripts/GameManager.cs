@@ -9,6 +9,7 @@ namespace CMP.Scripts
         Scatter,
         Chase,
         GameOver,
+        Win
     }
 
     public class GameManager : MonoBehaviour
@@ -17,6 +18,7 @@ namespace CMP.Scripts
         private InputManager _inputManager;
         private GameMode _gameMode = GameMode.Scatter;
         private readonly List<Ghost> _ghosts = new();
+        private readonly Dictionary<Vector2Int, Collectable> _collectables = new();
 
         public GameMode Mode
         {
@@ -33,6 +35,7 @@ namespace CMP.Scripts
             _pacman = Instantiate(AssetDatabase.Instance.PacmanPrefab);
             _pacman.Init(_inputManager, gridData);
             SetupEnemies(gridData);
+            SetupCollectables(gridData);
             CreateBackground(gridData);
             AdjustCamera(gridData);
         }
@@ -55,6 +58,17 @@ namespace CMP.Scripts
                 ghost.Init(gridData, spawnPos, GetJoinDelay(i), this);
                 _ghosts.Add(ghost);
             }
+        }
+
+        private void SetupCollectables(GridData gridData)
+        {
+            foreach (var cell in gridData.GetCoordsOfCellType(CellType.Pellet))
+                _collectables[cell] =
+                    Instantiate(AssetDatabase.Instance.PelletPrefab, cell.ToWorld(), Quaternion.identity);
+
+            foreach (var cell in gridData.GetCoordsOfCellType(CellType.PowerPellet))
+                _collectables[cell] = Instantiate(AssetDatabase.Instance.PowerPelletPrefab, cell.ToWorld(),
+                    Quaternion.identity);
         }
 
         private float GetJoinDelay(int index)
@@ -93,8 +107,20 @@ namespace CMP.Scripts
 
         private void Update()
         {
-            if (_gameMode == GameMode.GameOver)
+            if (_gameMode is GameMode.GameOver or GameMode.Win)
                 return;
+
+            if (_collectables.TryGetValue(_pacman.CurrentGridPos, out var collectable))
+            {
+                _collectables.Remove(_pacman.CurrentGridPos);
+                collectable.gameObject.SetActive(false);
+
+                if (_collectables.Count == 0)
+                {
+                    TriggerWin();
+                    return;
+                }
+            }
 
             foreach (var ghost in _ghosts)
             {
@@ -104,6 +130,16 @@ namespace CMP.Scripts
                     TriggerGameOver();
                     return;
                 }
+            }
+        }
+
+        private void TriggerWin()
+        {
+            _gameMode = GameMode.Win;
+            _pacman.enabled = false;
+            foreach (var ghost in _ghosts)
+            {
+                ghost.enabled = false;
             }
         }
 

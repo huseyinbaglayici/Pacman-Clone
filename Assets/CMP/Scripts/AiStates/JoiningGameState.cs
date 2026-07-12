@@ -8,7 +8,8 @@ namespace CMP.Scripts.AiStates
     {
         private static readonly List<CellType> AllowedCells = new()
         {
-            CellType.AiSpawnZone, CellType.Empty, CellType.AiGate, CellType.JoinGameCell
+            CellType.AiSpawnZone, CellType.Empty, CellType.AiGate, CellType.JoinGameCell, CellType.PowerPellet,
+            CellType.Pellet
         };
 
         private List<Vector2Int> _path;

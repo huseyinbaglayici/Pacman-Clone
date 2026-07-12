@@ -7,7 +7,8 @@ namespace CMP.Scripts.Helper
     {
         public static bool GetIsMovable(this CellType cellType)
         {
-            return cellType is CellType.Pacman or CellType.Empty or CellType.JoinGameCell;
+            return cellType is CellType.Pacman or CellType.Empty or CellType.JoinGameCell or CellType.PowerPellet
+                or CellType.Pellet;
         }
 
         public static List<Vector2Int> GetNeighbours(this Vector2Int cellCoords)
