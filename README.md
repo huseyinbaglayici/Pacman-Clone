@@ -11,6 +11,7 @@
 - **Day 3 (Jul 9)** — JoiningGame + BFS pathfinding, GridMover extraction, Scatter ve Chase state'leri (line-of-sight → game over).
 - **Day 4 (Jul 10)** — Editor tooling (assembly definitions + ghost gizmos), input button UI, walkability merkezileştirme + pathfinding allocation azaltma.
 - **Day 5 (Jul 11)** — Chase corner-lock, in-place respawn ile auto-restart, README + branch/tag ayrımı.
+- **Day 6 (Jul 12)** — Saf mantık için EditMode unit testleri (pathfinding, GridMover, dönüşümler).
 
 </details>
 
@@ -72,6 +73,9 @@ public void Spawn()
 private static readonly Vector2Int[] Offsets =
     { Vector2Int.left, Vector2Int.right, Vector2Int.up, Vector2Int.down };
 ```
+
+## Tests
+`Assets/CMP/Tests/EditMode` — saf mantığın EditMode unit testleri: BFS pathfinding (en kısa yol, dolaşma, ulaşılamaz hedef), GridMover (snap + overshoot taşıma) ve yön/hücre dönüşümleri. Window → General → Test Runner'dan koşulur. State machine bilinçli olarak kapsam dışı: sahne bağımlılığı unit'e uygun değil; davranış editor gizmo'ları ve play üzerinden gözlemleniyor.
 
 ## Scope
 - `main` — istenen case.
