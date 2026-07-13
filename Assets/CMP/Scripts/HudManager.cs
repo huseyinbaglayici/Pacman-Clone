@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace CMP.Scripts
 {
-    public class ScoreManager : MonoBehaviour
+    public class HudManager : MonoBehaviour
     {
         [SerializeField] private TMP_Text scoreText;
 

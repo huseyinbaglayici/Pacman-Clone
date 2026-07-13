@@ -18,7 +18,7 @@ namespace CMP.Scripts
     {
         private Pacman _pacman;
         private InputManager _inputManager;
-        private ScoreManager _scoreManager;
+        private HudManager _hudManager;
         private GameMode _gameMode = GameMode.Scatter;
         private float _frightenedTimer;
         private int _ghostEaten;
@@ -40,7 +40,7 @@ namespace CMP.Scripts
         {
             var gridData = AssetDatabase.Instance.GridData;
             _inputManager = Instantiate(AssetDatabase.Instance.InputManagerPrefab);
-            _scoreManager = Instantiate(AssetDatabase.Instance.ScoreManagerPrefab);
+            _hudManager = Instantiate(AssetDatabase.Instance.HudManagerPrefab);
             _pacman = Instantiate(AssetDatabase.Instance.PacmanPrefab);
             _pacman.Init(_inputManager, gridData);
             SetupEnemies(gridData);
@@ -189,7 +189,7 @@ namespace CMP.Scripts
         private void AddScore(int amount)
         {
             _score += amount;
-            _scoreManager.SetScore(_score);
+            _hudManager.SetScore(_score);
         }
 
         private void TriggerWin()

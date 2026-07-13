@@ -8,7 +8,7 @@ namespace CMP.Scripts
 
         public Pacman PacmanPrefab = Resources.Load<Pacman>("Pacman");
         public InputManager InputManagerPrefab = Resources.Load<InputManager>("InputManager");
-        public ScoreManager ScoreManagerPrefab = Resources.Load<ScoreManager>("ScoreManager");
+        public HudManager HudManagerPrefab = Resources.Load<HudManager>("HudManager");
         public GridData GridData = Resources.Load<GridData>("GridData");
         public Ghost Ghost = Resources.Load<Ghost>("Ghost");
         public MapVisualSettings MapVisualSettings = Resources.Load<MapVisualSettings>("MapVisualSettings");
