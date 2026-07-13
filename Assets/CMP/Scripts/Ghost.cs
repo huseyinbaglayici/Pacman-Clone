@@ -51,6 +51,8 @@ namespace CMP.Scripts
             _currentState.OnEnter();
         }
 
+        public void GetFrightened() => ChangeState(new FrightenedState(_blackboard));
+
         public void GetEaten() => ChangeState(new EatenState(_blackboard));
     }
 }
