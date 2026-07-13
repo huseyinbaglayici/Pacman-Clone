@@ -11,9 +11,7 @@ namespace CMP.Scripts.AiStates
 
         public override GhostStateType Type => GhostStateType.Frightened;
 
-        public override void OnEnter()
-        {
-        }
+        public override void OnEnter() => GhostBlackboard.Heading = GhostBlackboard.Heading.Reverse();
 
         public override void Update()
         {
@@ -33,7 +31,7 @@ namespace CMP.Scripts.AiStates
 
             GhostBlackboard.Heading = chosen;
             Vector2Int target = GhostBlackboard.CurrentGridPos + chosen.ToVector2Int();
-            GhostBlackboard.Ghost.MoveTo(target);
+            GhostBlackboard.Ghost.MoveTo(target, GameSettings.FrightenedMovementDuration);
         }
     }
 }

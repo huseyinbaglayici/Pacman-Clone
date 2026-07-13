@@ -4,6 +4,7 @@ namespace CMP.Scripts
     {
         public const float AiMovementDuration = 0.25f;
         public const float PacmanMovementDuration = 0.25f;
+        public const float FrightenedMovementDuration = 0.4f; 
         public const float RestartDelay = 3f;
         public const float FrightenedDuration = 8f;
         public const float FrightenedBlinkWarning = 3f;
