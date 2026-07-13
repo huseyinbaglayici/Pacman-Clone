@@ -11,7 +11,11 @@ namespace CMP.Scripts.AiStates
 
         public override GhostStateType Type => GhostStateType.Frightened;
 
-        public override void OnEnter() => GhostBlackboard.Heading = GhostBlackboard.Heading.Reverse();
+        public override void OnEnter()
+        {
+            if (IsHeadingTowardPacman())
+                GhostBlackboard.Heading = GhostBlackboard.Heading.Reverse();
+        }
 
         public override void Update()
         {
@@ -32,6 +36,12 @@ namespace CMP.Scripts.AiStates
             GhostBlackboard.Heading = chosen;
             Vector2Int target = GhostBlackboard.CurrentGridPos + chosen.ToVector2Int();
             GhostBlackboard.Ghost.MoveTo(target, GameSettings.FrightenedMovementDuration);
+        }
+
+        private bool IsHeadingTowardPacman()
+        {
+            Vector2Int toPacman = GhostBlackboard.GameManager.Pacman.CurrentGridPos - GhostBlackboard.CurrentGridPos;
+            return Vector2.Dot(toPacman, GhostBlackboard.Heading.ToVector2Int()) > 0f;
         }
     }
 }

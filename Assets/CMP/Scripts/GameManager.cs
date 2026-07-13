@@ -191,12 +191,6 @@ namespace CMP.Scripts
             _gameMode = GameMode.Frightened;
             _frightenedTimer = GameSettings.FrightenedDuration;
             _ghostsEaten = 0;
-
-            foreach (var ghost in _ghosts)
-            {
-                if (ghost.State == GhostStateType.Frightened)
-                    ghost.GetFrightened();
-            }
         }
 
         private void HandleCatch()
