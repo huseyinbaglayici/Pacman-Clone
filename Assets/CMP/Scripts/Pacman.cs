@@ -15,6 +15,7 @@ namespace CMP.Scripts
         private Direction _headingDirection = Direction.None;
 
         public Vector2Int CurrentGridPos => _mover.CurrentCell;
+        public Vector2Int VisualCell => Vector2Int.RoundToInt(transform.position);
 
         public Animator Animator;
 
@@ -88,6 +89,8 @@ namespace CMP.Scripts
             if (transform.rotation == rotation) return;
             transform.rotation = rotation;
         }
+
+        public void CenterOnCell() => transform.position = VisualCell.ToWorld();
 
 
         public void PlayFail() => Animator.Play(FailAnimationName);

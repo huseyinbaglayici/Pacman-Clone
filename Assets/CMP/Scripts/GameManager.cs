@@ -169,7 +169,7 @@ namespace CMP.Scripts
 
         private void HandleCollectables()
         {
-            if (!_collectables.TryGetValue(_pacman.CurrentGridPos, out var collectable) ||
+            if (!_collectables.TryGetValue(_pacman.VisualCell, out var collectable) ||
                 !collectable.gameObject.activeSelf)
                 return;
 
@@ -234,6 +234,7 @@ namespace CMP.Scripts
         private void TriggerWin()
         {
             _gameMode = GameMode.Win;
+            _pacman.CenterOnCell();
             _pacman.enabled = false;
             foreach (var ghost in _ghosts)
             {
