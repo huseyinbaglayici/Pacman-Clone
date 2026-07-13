@@ -1,5 +1,9 @@
 # PAC-MAN Case Study
 
+## Scope
+- `main` — istenen case: Pacman hareketi, 4 state'li ghost AI (InHouse/JoiningGame/Scatter/Chase), yakalanma → fail animasyonu; ek olarak otomatik restart, editor gizmo'ları ve unit testler.
+- `feature/core-loop` — ekstralar: collectable'lar + win condition, frightened mode + ghost eating, score, can sistemi, level döngüsü.
+
 ## How to Run
 `Assets/Scenes/GameplayScene.unity` sahnesini açıp Play'e basın. Yön, ekrandaki butonlarla veriliyor.
 
@@ -77,6 +81,4 @@ private static readonly Vector2Int[] Offsets =
 ## Tests
 `Assets/CMP/Tests/EditMode` — saf mantığın EditMode unit testleri: BFS pathfinding (en kısa yol, dolaşma, ulaşılamaz hedef), GridMover (snap + overshoot taşıma) ve yön/hücre dönüşümleri. Window → General → Test Runner'dan koşulur. State machine bilinçli olarak kapsam dışı: sahne bağımlılığı unit'e uygun değil; davranış editor gizmo'ları ve play üzerinden gözlemleniyor.
 
-## Scope
-- `main` — istenen case: Pacman hareketi, 4 state'li ghost AI (InHouse/JoiningGame/Scatter/Chase), yakalanma → fail animasyonu; ek olarak otomatik restart, editor gizmo'ları ve unit testler.
-- `feature/core-loop` — ekstralar: collectable'lar + win condition, frightened mode, score, can sistemi, level akışı.
+
