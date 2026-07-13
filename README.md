@@ -1,5 +1,7 @@
 # PAC-MAN Case Study
 
+<img src="Docs/core.gif" width="275" alt="Gameplay">
+
 ## Scope
 - `main` — istenen case: Pacman hareketi, 4 state'li ghost AI (InHouse/JoiningGame/Scatter/Chase), yakalanma → fail animasyonu; ek olarak otomatik restart, editor gizmo'ları ve unit testler.
 - `feature/core-loop` — ekstralar: collectable'lar + win condition, frightened mode + ghost eating, score, can sistemi, level döngüsü.
