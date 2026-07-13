@@ -21,10 +21,13 @@ namespace CMP.Scripts
         private HudManager _hudManager;
         private GameMode _gameMode = GameMode.Scatter;
         private float _frightenedTimer;
-        private int _ghostEaten;
+        private int _ghostsEaten;
         private int _score;
+        private int _remainingCollectables;
+        private int _lives;
         private readonly List<Ghost> _ghosts = new();
         private readonly Dictionary<Vector2Int, Collectable> _collectables = new();
+        [SerializeField] private int startingLives = 3;
 
         public float FrightenedTimeLeft => _frightenedTimer;
 
@@ -40,7 +43,10 @@ namespace CMP.Scripts
         {
             var gridData = AssetDatabase.Instance.GridData;
             _inputManager = Instantiate(AssetDatabase.Instance.InputManagerPrefab);
+            _lives = startingLives;
             _hudManager = Instantiate(AssetDatabase.Instance.HudManagerPrefab);
+            _hudManager.SetScore(_score);
+            _hudManager.SetLives(_lives);
             _pacman = Instantiate(AssetDatabase.Instance.PacmanPrefab);
             _pacman.Init(_inputManager, gridData);
             SetupEnemies(gridData);
@@ -80,6 +86,8 @@ namespace CMP.Scripts
             foreach (var cell in gridData.GetCoordsOfCellType(CellType.PowerPellet))
                 _collectables[cell] = Instantiate(AssetDatabase.Instance.PowerPelletPrefab, cell.ToWorld(),
                     Quaternion.identity, holder);
+
+            _remainingCollectables = _collectables.Count;
         }
 
         private float GetJoinDelay(int index)
@@ -137,27 +145,28 @@ namespace CMP.Scripts
 
         private void HandleCollectables()
         {
-            if (_collectables.TryGetValue(_pacman.CurrentGridPos, out var collectable))
-            {
-                _collectables.Remove(_pacman.CurrentGridPos);
-                collectable.gameObject.SetActive(false);
-                AddScore(collectable.Type == CollectableType.Pellet
-                    ? GameSettings.PelletScore
-                    : GameSettings.PowerPelletScore);
+            if (!_collectables.TryGetValue(_pacman.CurrentGridPos, out var collectable) ||
+                !collectable.gameObject.activeSelf)
+                return;
 
-                if (collectable.Type == CollectableType.PowerPellet)
-                    EnterFrightened();
+            collectable.gameObject.SetActive(false);
+            _remainingCollectables--;
+            AddScore(collectable.Type == CollectableType.Pellet
+                ? GameSettings.PelletScore
+                : GameSettings.PowerPelletScore);
 
-                if (_collectables.Count == 0)
-                    TriggerWin();
-            }
+            if (collectable.Type == CollectableType.PowerPellet)
+                EnterFrightened();
+
+            if (_remainingCollectables == 0)
+                TriggerWin();
         }
 
         private void EnterFrightened()
         {
             _gameMode = GameMode.Frightened;
             _frightenedTimer = GameSettings.FrightenedDuration;
-            _ghostEaten = 0;
+            _ghostsEaten = 0;
         }
 
         private void HandleCatch()
@@ -173,8 +182,8 @@ namespace CMP.Scripts
 
                 if (ghost.State == GhostStateType.Frightened)
                 {
-                    AddScore(GameSettings.GhostScores[Mathf.Min(_ghostEaten, GameSettings.GhostScores.Length - 1)]);
-                    _ghostEaten++;
+                    AddScore(GameSettings.GhostScores[Mathf.Min(_ghostsEaten, GameSettings.GhostScores.Length - 1)]);
+                    _ghostsEaten++;
                     ghost.GetEaten();
                 }
 
@@ -212,7 +221,28 @@ namespace CMP.Scripts
                 ghost.enabled = false;
             }
 
-            Invoke(nameof(Restart), GameSettings.RestartDelay);
+            _lives--;
+            _hudManager.SetLives(_lives);
+
+            Invoke(_lives > 0 ? nameof(Restart) : nameof(FullRestart), GameSettings.RestartDelay);
+        }
+
+        private void FullRestart()
+        {
+            _lives = startingLives;
+            _score = 0;
+            _hudManager.SetScore(_score);
+            _hudManager.SetLives(_lives);
+            ResetCollectables();
+            Restart();
+        }
+
+        private void ResetCollectables()
+        {
+            foreach (var collectable in _collectables.Values)
+                collectable.gameObject.SetActive(true);
+
+            _remainingCollectables = _collectables.Count;
         }
 
         private void Restart()
