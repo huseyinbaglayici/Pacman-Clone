@@ -2,7 +2,6 @@
 using CMP.Scripts.Helper;
 using UnityEditor;
 using UnityEngine;
-using AssetDatabase = CMP.Scripts.AssetDatabase;
 
 namespace CMP.Editor
 {
@@ -36,7 +35,7 @@ namespace CMP.Editor
             if (dir == Vector2Int.zero)
                 return;
 
-            GridData grid = AssetDatabase.Instance.GridData;
+            GridData grid = ghost.GridData;
             Vector2Int cell = ghost.CurrentGridPos;
 
             for (int i = 0; i < GameSettings.AiSightRange; i++)

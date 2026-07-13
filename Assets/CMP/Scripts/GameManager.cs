@@ -19,10 +19,13 @@ namespace CMP.Scripts
         private Pacman _pacman;
         private InputManager _inputManager;
         private HudManager _hudManager;
+        private Transform _collectablesHolder;
+        private SpriteRenderer _mapRenderer;
         private GameMode _gameMode = GameMode.Scatter;
         private float _frightenedTimer;
         private int _ghostsEaten;
         private int _score;
+        private int _levelIndex;
         private int _remainingCollectables;
         private int _lives;
         private readonly List<Ghost> _ghosts = new();
@@ -41,18 +44,27 @@ namespace CMP.Scripts
 
         private void Start()
         {
-            var gridData = AssetDatabase.Instance.GridData;
             _inputManager = Instantiate(AssetDatabase.Instance.InputManagerPrefab);
             _lives = startingLives;
             _hudManager = Instantiate(AssetDatabase.Instance.HudManagerPrefab);
             _hudManager.SetScore(_score);
             _hudManager.SetLives(_lives);
             _pacman = Instantiate(AssetDatabase.Instance.PacmanPrefab);
+            LoadLevel(0);
+        }
+
+        private void LoadLevel(int index)
+        {
+            GridData gridData = AssetDatabase.Instance.Levels[index];
             _pacman.Init(_inputManager, gridData);
             SetupEnemies(gridData);
             SetupCollectables(gridData);
             CreateBackground(gridData);
             AdjustCamera(gridData);
+
+            _gameMode = GameMode.Scatter;
+            _inputManager.Clear();
+            _frightenedTimer = 0;
         }
 
 
@@ -66,26 +78,31 @@ namespace CMP.Scripts
                 $"AiCharacterCount({GameSettings.AiCharacterCount}) exceeds AiJoinDelays.Length({GameSettings.AiJoinDelays.Length}) length; extra ghosts fall back to an extrapolated stagger.");
 
 
-            for (int i = 0; i < GameSettings.AiCharacterCount; i++)
+            if (_ghosts.Count == 0)
             {
-                var ghost = Instantiate(AssetDatabase.Instance.Ghost);
-                var spawnPos = spawnPositions[i % spawnPositions.Count];
-                ghost.Init(gridData, spawnPos, GetJoinDelay(i), this);
-                _ghosts.Add(ghost);
+                for (int i = 0; i < GameSettings.AiCharacterCount; i++)
+                    _ghosts.Add(Instantiate(AssetDatabase.Instance.Ghost));
             }
+
+            for (int i = 0; i < _ghosts.Count; i++)
+                _ghosts[i].Init(gridData, spawnPositions[i % spawnPositions.Count], GetJoinDelay(i), this);
         }
 
         private void SetupCollectables(GridData gridData)
         {
-            var holder = new GameObject("Collectables").transform;
+            if (_collectablesHolder != null)
+                Destroy(_collectablesHolder.gameObject);
+            _collectables.Clear();
+
+            _collectablesHolder = new GameObject("Collectables").transform;
 
             foreach (var cell in gridData.GetCoordsOfCellType(CellType.Pellet))
-                _collectables[cell] =
-                    Instantiate(AssetDatabase.Instance.PelletPrefab, cell.ToWorld(), Quaternion.identity, holder);
+                _collectables[cell] = Instantiate(AssetDatabase.Instance.PelletPrefab,
+                    cell.ToWorld(), Quaternion.identity, _collectablesHolder);
 
             foreach (var cell in gridData.GetCoordsOfCellType(CellType.PowerPellet))
-                _collectables[cell] = Instantiate(AssetDatabase.Instance.PowerPelletPrefab, cell.ToWorld(),
-                    Quaternion.identity, holder);
+                _collectables[cell] = Instantiate(AssetDatabase.Instance.PowerPelletPrefab,
+                    cell.ToWorld(), Quaternion.identity, _collectablesHolder);
 
             _remainingCollectables = _collectables.Count;
         }
@@ -104,14 +121,21 @@ namespace CMP.Scripts
 
         private void CreateBackground(GridData gridData)
         {
+            if (_mapRenderer != null)
+            {
+                Destroy(_mapRenderer.sprite.texture);
+                Destroy(_mapRenderer.sprite);
+                Destroy(_mapRenderer.gameObject);
+            }
+
             var targetTexture = MapTextureGenerator.Generate(gridData, AssetDatabase.Instance.MapVisualSettings);
             var textureObject = new GameObject("MapTexture");
             textureObject.transform.position = new Vector3(-0.5f, -0.5f, 0f);
             var targetSprite = Sprite.Create(targetTexture, new Rect(0f, 0f, targetTexture.width, targetTexture.height),
                 Vector2.zero, AssetDatabase.Instance.MapVisualSettings.pixelsPerCell);
-            var spriteRenderer = textureObject.AddComponent<SpriteRenderer>();
-            spriteRenderer.sprite = targetSprite;
-            spriteRenderer.sortingOrder = -1;
+            _mapRenderer = textureObject.AddComponent<SpriteRenderer>();
+            _mapRenderer.sprite = targetSprite;
+            _mapRenderer.sortingOrder = -1;
         }
 
         private void AdjustCamera(GridData gridData)
@@ -215,6 +239,14 @@ namespace CMP.Scripts
             {
                 ghost.enabled = false;
             }
+
+            Invoke(nameof(LoadNextLevel), GameSettings.RestartDelay);
+        }
+
+        private void LoadNextLevel()
+        {
+            _levelIndex = (_levelIndex + 1) % AssetDatabase.Instance.Levels.Length;
+            LoadLevel(_levelIndex);
         }
 
         private void TriggerGameOver()
@@ -237,18 +269,10 @@ namespace CMP.Scripts
         {
             _lives = startingLives;
             _score = 0;
+            _levelIndex = 0;
             _hudManager.SetScore(_score);
             _hudManager.SetLives(_lives);
-            ResetCollectables();
-            Restart();
-        }
-
-        private void ResetCollectables()
-        {
-            foreach (var collectable in _collectables.Values)
-                collectable.gameObject.SetActive(true);
-
-            _remainingCollectables = _collectables.Count;
+            LoadLevel(0);
         }
 
         private void Restart()

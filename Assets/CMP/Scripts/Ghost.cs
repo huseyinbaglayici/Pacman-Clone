@@ -12,6 +12,7 @@ namespace CMP.Scripts
         private GridMover _mover;
         private Vector2Int _spawnGridPos;
 
+        public GridData GridData => _blackboard.GridData;
         public Vector2Int CurrentGridPos => _mover.CurrentCell;
         public float FrightenedTimeLeft => _blackboard.GameManager.FrightenedTimeLeft;
         public GhostStateType State => _currentState.Type;
