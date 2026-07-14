@@ -6,12 +6,6 @@ namespace CMP.Scripts.AiStates
 {
     public class JoiningGameState : GhostState
     {
-        private static readonly List<CellType> AllowedCells = new()
-        {
-            CellType.AiSpawnZone, CellType.Empty, CellType.AiGate, CellType.JoinGameCell, CellType.PowerPellet,
-            CellType.Pellet
-        };
-
         private List<Vector2Int> _path;
         private int _pathIndex;
 
@@ -25,7 +19,7 @@ namespace CMP.Scripts.AiStates
         {
             Vector2Int goal = GhostBlackboard.GridData.GetCoordsOfCellType(CellType.JoinGameCell)[0];
             _path = Pathfinding.FindPath(GhostBlackboard.CurrentGridPos, goal,
-                cell => GhostBlackboard.GridData.IsCellMovable(cell, AllowedCells));
+                cell => GhostBlackboard.GridData.IsCellMovable(cell, GhostCells.GateTransit));
             _pathIndex = 0;
         }
 

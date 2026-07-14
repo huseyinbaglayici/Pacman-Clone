@@ -229,11 +229,7 @@ namespace CMP.Scripts
         {
             _gameMode = GameMode.Win;
             _pacman.CenterOnCell();
-            _pacman.enabled = false;
-            foreach (var ghost in _ghosts)
-            {
-                ghost.enabled = false;
-            }
+            FreezeEntities();
 
             Invoke(nameof(LoadNextLevel), GameSettings.RestartDelay);
         }
@@ -248,16 +244,20 @@ namespace CMP.Scripts
         {
             _gameMode = GameMode.GameOver;
             _pacman.PlayFail();
+            FreezeEntities();
+            _lives--;
+            _hudManager.SetLives(_lives);
+
+            Invoke(_lives > 0 ? nameof(Restart) : nameof(FullRestart), GameSettings.RestartDelay);
+        }
+
+        private void FreezeEntities()
+        {
             _pacman.enabled = false;
             foreach (var ghost in _ghosts)
             {
                 ghost.enabled = false;
             }
-
-            _lives--;
-            _hudManager.SetLives(_lives);
-
-            Invoke(_lives > 0 ? nameof(Restart) : nameof(FullRestart), GameSettings.RestartDelay);
         }
 
         private void FullRestart()

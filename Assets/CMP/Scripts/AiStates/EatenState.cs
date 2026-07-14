@@ -6,12 +6,6 @@ namespace CMP.Scripts.AiStates
 {
     public class EatenState : GhostState
     {
-        private static readonly List<CellType> AllowedCells = new()
-        {
-            CellType.AiSpawnZone, CellType.Empty, CellType.AiGate, CellType.JoinGameCell, CellType.Pellet,
-            CellType.PowerPellet
-        };
-
         private List<Vector2Int> _path;
         private int _pathIndex;
 
@@ -24,7 +18,7 @@ namespace CMP.Scripts.AiStates
         public override void OnEnter()
         {
             _path = Pathfinding.FindPath(GhostBlackboard.CurrentGridPos, GhostBlackboard.SpawnGridPos,
-                cell => GhostBlackboard.GridData.IsCellMovable(cell, AllowedCells));
+                cell => GhostBlackboard.GridData.IsCellMovable(cell, GhostCells.GateTransit));
             _pathIndex = 0;
         }
 
@@ -43,7 +37,7 @@ namespace CMP.Scripts.AiStates
             _pathIndex++;
 
             GhostBlackboard.Heading = (next - GhostBlackboard.CurrentGridPos).ToDirection();
-            GhostBlackboard.Ghost.MoveTo(next , GameSettings.EatenMovementDuration);
+            GhostBlackboard.Ghost.MoveTo(next, GameSettings.EatenMovementDuration);
         }
     }
 }
