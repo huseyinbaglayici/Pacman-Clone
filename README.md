@@ -39,7 +39,7 @@
 | JoiningGame | Kapıdan (AiGate) geçip labirente BFS yolunu izler. | JoinGameCell'e varınca → **Scatter** |
 | Scatter | Rastgele, geri dönmeyen yönlerde ilerler; her hücrede line of sight tarar. | Pacman'i görünce → **Chase** ve global modu Chase yapar; mod Chase ise de geçer. Mod Frightened olunca → **Frightened** |
 | Chase | Pacman'e doğru yol bulur, köşelerde yeniden hesaplar. | Mod Frightened olunca → **Frightened**. Normal modda yakalama can kaybettirir; Restart tüm ghost'ları **InHouse**'a döndürür. |
-| Frightened | Girişte yön çevirir; rastgele, geri dönmeyen yönlerde yavaşlamış kaçar. Mavi görünür, süre biterken yanıp söner. | Süre dolunca → **Scatter**; pacman'e yakalanınca → **Eaten** |
+| Frightened | Pacman'e doğru geliyorsa yön çevirir; rastgele, geri dönmeyen yönlerde yavaşlamış kaçar. Mavi görünür, süre biterken yanıp söner. | Süre dolunca → **Scatter**; pacman'e yakalanınca → **Eaten** |
 | Eaten | Gövde kapanır (sadece gözler), 2x hızla BFS ile spawn'a döner. | Spawn'a varınca → **InHouse** |
 
 ## Kararlar & Trade-off'lar
